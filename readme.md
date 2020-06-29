@@ -1,4 +1,5 @@
 # micro_schedule
+micro_schedule is a lightweight docker container that schedules HTTP hooks
 
 ## Config
 You need to define your triggers as a json array in the file ./config
