@@ -4,6 +4,7 @@ import threading
 import requests
 
 triggred_tasks=0
+is_running=False
 logs_enabled=False
 accepted_days=[str(i) for i in range(1,32)]+["any"]
 accepted_monts=[str(i) for i in range(1,13)]+["any"]
@@ -106,13 +107,25 @@ def trigger_tasks(tasks,datetime_object):
             thread = HookThread(index,triggred_tasks,task["url"])
             thread.start()
         index+=1
-            
-def run(tasks,enable_logs=False):
+
+def set_logs_enabled(enable_logs=False):
     global logs_enabled
     logs_enabled=enable_logs
+
+def run(tasks):
+    global is_running
+    is_running=True
     datetime_object = datetime.datetime.now()
     print("[*]\t\t"+datetime_object.strftime("%a %Y-%m-%d %H:%M:%S")+"\tmicro_scedule started ..", flush=True)
     while True:
+        if is_running:
+            break
         datetime_object = datetime.datetime.now()
         trigger_tasks(tasks,datetime_object)
         time.sleep(1)
+
+def stop():
+    global is_running
+    is_running=False
+    datetime_object = datetime.datetime.now()
+    print("[*]\t\t"+datetime_object.strftime("%a %Y-%m-%d %H:%M:%S")+"\tmicro_scedule stoped ..", flush=True)
