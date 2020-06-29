@@ -3,7 +3,7 @@ services:
     micro_schedule_service:
         build: ./
         volumes:
-            - ./:/micro_schedule
+            - ./micro_schedule:/micro_schedule
         environment: 
             - ENABLE_LOGS=false
             - TZ=Europe/Stockholm

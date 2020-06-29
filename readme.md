@@ -66,7 +66,7 @@ services:
     micro_schedule_service:
         build: ./
         volumes:
-            - ./:/micro_schedule
+            - ./micro_schedule:/micro_schedule
         environment: 
             - ENABLE_LOGS=true
             - TZ=Europe/Stockholm
@@ -76,4 +76,12 @@ services:
 ## Runing
 ```sh
 docker-compose up
+```
+
+
+## Runing outside docker
+```sh
+cd micro_schedule
+pip3.6 install -r requirements.txt
+python3.6 app.py
 ```

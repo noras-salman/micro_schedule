@@ -5,7 +5,14 @@ import requests
 
 triggred_tasks=0
 logs_enabled=False
-
+accepted_days=[str(i) for i in range(1,32)]+["any"]
+accepted_monts=[str(i) for i in range(1,13)]+["any"]
+accepted_seconds=[str(i) for i in range(60)]+["any"]
+accepted_minutes=[str(i) for i in range(60)]+["any"]
+accepted_hours=[str(i) for i in range(24)]+["any"]
+accepted_weekdays=["any","monday","tuesday","wednsday","thursday","friday","saturday","sunday","weekday","weekend"]
+accepted_keys=["at_weekday","at_hour","at_minute","at_second","at_day","at_month","url"]
+ 
 weekdays={
     "monday":[0],
     "tuesday":[1],
