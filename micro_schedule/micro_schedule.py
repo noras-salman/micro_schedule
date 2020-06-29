@@ -4,16 +4,24 @@ import threading
 import requests
 
 triggred_tasks=0
+tasks=[]
 is_running=False
 logs_enabled=False
 accepted_days=[str(i) for i in range(1,32)]+["any"]
 accepted_monts=[str(i) for i in range(1,13)]+["any"]
-accepted_seconds=[str(i) for i in range(60)]+["any"]
-accepted_minutes=[str(i) for i in range(60)]+["any"]
-accepted_hours=[str(i) for i in range(24)]+["any"]
-accepted_weekdays=["any","monday","tuesday","wednsday","thursday","friday","saturday","sunday","weekday","weekend"]
-accepted_keys=["at_weekday","at_hour","at_minute","at_second","at_day","at_month","url"]
  
+ 
+accepted_keys=["at_weekday","at_hour","at_minute","at_second","at_day","at_month","url"]
+
+validation_values={
+    "at_weekday":["any","monday","tuesday","wednsday","thursday","friday","saturday","sunday","weekday","weekend"],
+    "at_hour":[str(i) for i in range(24)]+["any"],
+    "at_minute":[str(i) for i in range(60)]+["any"],
+    "at_second":[str(i) for i in range(60)]+["any"],
+    "at_day":[str(i) for i in range(1,32)]+["any"],
+    "at_month":[str(i) for i in range(1,13)]+["any"]
+}
+
 weekdays={
     "monday":[0],
     "tuesday":[1],
@@ -112,13 +120,45 @@ def set_logs_enabled(enable_logs=False):
     global logs_enabled
     logs_enabled=enable_logs
 
-def run(tasks):
+def validate_task(task_list):
+    if not isinstance(task_list,list):
+        raise Exception("tasks should be a list")
+    for task in task_list:
+        if not isinstance(task,dict):
+            raise Exception("Every task should be an object")
+        for key in task:
+            if not isinstance(key,str):
+                raise Exception("All keys should be strings")
+            if key not in accepted_keys:
+                raise Exception("Unknown key '"+key+"' should be in "+",".join(accepted_keys))
+            if not isinstance(task[key],str):
+                raise Exception("All values should be strings")
+            if key=="url":
+                if not (task[key].startswith("http://") or task[key].startswith("https://")):
+                    raise Exception("Unaccepted url "+task[key])
+            else:
+                if task[key] not in validation_values[key]:
+                    raise Exception("Unaccepted value for '"+key+"' should be in "+",".join(validation_values[key]))
+     
+
+
+def load_tasks(task_list):
+    global tasks
+    tasks=task_list
+    validate_task(task_list)
+    datetime_object = datetime.datetime.now()
+    print("[*]\t\t"+datetime_object.strftime("%a %Y-%m-%d %H:%M:%S")+"\tmicro_scedule tasks loaded ..", flush=True)
+
+def run():
     global is_running
     is_running=True
     datetime_object = datetime.datetime.now()
     print("[*]\t\t"+datetime_object.strftime("%a %Y-%m-%d %H:%M:%S")+"\tmicro_scedule started ..", flush=True)
+    if len(tasks)==0:
+        print("[*]\t\t"+datetime_object.strftime("%a %Y-%m-%d %H:%M:%S")+"\ttmicro_scedule no tasks found", flush=True)
+        stop()
     while True:
-        if is_running:
+        if not is_running:
             break
         datetime_object = datetime.datetime.now()
         trigger_tasks(tasks,datetime_object)
