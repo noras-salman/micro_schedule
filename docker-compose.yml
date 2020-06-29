@@ -1,0 +1,10 @@
+version: "3.2"
+services:
+    micro_schedule_service:
+        build: ./
+        volumes:
+            - ./:/micro_schedule
+        environment: 
+            - ENABLE_LOGS=false
+            - TZ=Europe/Stockholm
+        restart: always

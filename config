@@ -1,0 +1,20 @@
+[
+    {
+        "at_weekday":"any",
+        "at_hour":"any",
+        "at_minute":"any",
+        "at_second":"0",
+        "at_day":"any",
+        "at_month":"any",
+        "url":"https://www.example.com"
+    },
+     {
+        "at_weekday":"monday",
+        "at_hour":"11",
+        "at_minute":"1",
+        "at_second":"1",
+        "at_day":"any",
+        "at_month":"any",
+        "url":"https://www.example.com"
+    }
+]
